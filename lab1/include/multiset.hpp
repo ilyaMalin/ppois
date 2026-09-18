@@ -2,25 +2,38 @@
 
 #define MULTISET_HPP
 #include "type.hpp"
+#include <vector>
 
 class multiset
 {
 private:
-    std::unique_ptr<node> set;
+    std::vector<element> set;
 
 public:
     multiset();
-    multiset(const std::string &);
-    multiset(const std::vector<node *> &);
+    multiset(const char *);
+    multiset(std::string &);
 
-    void insert(const std::string &);
-    void insert(const std::vector<node *> &);
+    bool empty() const;
 
-    void remove(const std::string &);
-    void remove(const std::vector<node *> &);
+    void insert(const element &);
+    void remove(const element &);
 
-    bool contains(const std::string &) const;
-    bool contains(const std::vector<node *> &) const;
+    size_t cardinality() const;
+
+    bool operator[](const element &) const;
+
+    multiset &operator+(const element &);
+    multiset &operator+=(const element &);
+
+    multiset &operator*(const element &);
+    multiset &operator*=(const element &);
+
+    multiset &operator-(const element &);
+    multiset &operator-=(const element &);
+
+    bool operator==(const element &) const;
+    bool operator!=(const element &) const;
 
     multiset buildBoolean();
 };

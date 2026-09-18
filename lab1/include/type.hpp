@@ -1,19 +1,24 @@
 #ifndef TYPE_HPP
 
 #define TYPE_HPP
-#include <vector>
-#include <memory>
+#include <iostream>
 #include <string>
 
-struct node
-{
-    std::string value;
-    unsigned int countDuplicate = 0;
-    std::unique_ptr<node> leftNode = nullptr;
-    std::unique_ptr<node> right = nullptr;
-    std::vector<std::vector<node *>> subset;
+class multiset;
 
-    node(const std::string &value) : value(value) {}
+class element
+{
+private:
+    std::string *stringValue = nullptr;
+    multiset *setValue = nullptr;
+
+public:
+    std::string *getStringValue() const;
+    multiset *getSetValue() const;
+
+    bool operator==(const element &) const;
+
+    bool empty() const;
 };
 
 #endif
