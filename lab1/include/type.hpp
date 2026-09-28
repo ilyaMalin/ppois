@@ -2,6 +2,7 @@
 
 #define TYPE_HPP
 #include <iostream>
+#include <memory>
 #include <string>
 
 class multiset;
@@ -9,16 +10,14 @@ class multiset;
 class element
 {
 private:
-    std::string *stringValue = nullptr;
-    multiset *setValue = nullptr;
+    std::unique_ptr<std::string> stringValue = nullptr;
+    std::unique_ptr<multiset> setValue = nullptr;
 
 public:
-    std::string *getStringValue() const;
+    std::string &getStringValue();
     multiset *getSetValue() const;
 
     bool operator==(const element &) const;
-
-    bool empty() const;
 };
 
 #endif

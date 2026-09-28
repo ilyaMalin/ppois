@@ -1,33 +1,37 @@
 #include "../include/type.hpp"
+#include "../include/multiset.hpp"
 
-std::string *element::getStringValue() const
+std::string &element::getStringValue()
 {
-    return this->stringValue;
+    if (this->stringValue)
+    {
+        return *this->stringValue;
+    }
+
+    throw std::runtime_error("elementValue != string || !elementValue");
 }
 
 multiset *element::getSetValue() const
 {
-    return this->setValue;
-}
-
-// СДЕЛАТЬ !!!!!!!!!!!!!!!!!!!!!!!
-// + СРАВНЕНИЕ МНОЖЕСТВ
-bool element::operator==(const element &element) const
-{
-    if (this->empty() && element.empty())
+    if (this->setValue)
     {
-        return true;
+        return this->setValue.get();
     }
 
-    if (*this->stringValue == *element.getStringValue())
-    {
-        return true;
-    } 
-
-    return false;
+    return nullptr;
 }
 
-bool element::empty() const
+bool element::operator==(const element &otherElement) const
 {
-    return !this->setValue && !this->stringValue;
+    if (this->stringValue && otherElement.stringValue)
+    {
+        return this->stringValue == otherElement.stringValue;
+    }
+
+    if (this->setValue && otherElement.getSetValue())
+    {
+        return *this->getSetValue() == *otherElement.getSetValue();
+    }
+
+    return false;
 }

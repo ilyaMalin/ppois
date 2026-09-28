@@ -1,6 +1,7 @@
 #ifndef MULTISET_HPP
 
 #define MULTISET_HPP
+#include <stdexcept>
 #include "type.hpp"
 #include <vector>
 
@@ -23,17 +24,17 @@ public:
 
     bool operator[](const element &) const;
 
-    multiset &operator+(const element &);
-    multiset &operator+=(const element &);
+    multiset &operator+(const multiset &);
+    multiset &operator+=(const multiset &);
 
-    multiset &operator*(const element &);
-    multiset &operator*=(const element &);
+    multiset &operator*(const multiset &);
+    multiset &operator*=(const multiset &);
 
-    multiset &operator-(const element &);
-    multiset &operator-=(const element &);
+    multiset &operator-(const multiset &);
+    multiset &operator-=(const multiset &);
 
-    bool operator==(const element &) const;
-    bool operator!=(const element &) const;
+    bool operator==(const multiset &) const;
+    bool operator!=(const multiset &) const;
 
     multiset buildBoolean();
 };
