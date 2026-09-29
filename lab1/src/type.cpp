@@ -13,6 +13,20 @@ element::element(const element &other)
     }
 }
 
+element &element::operator=(const element &otherElement)
+{
+    if (otherElement.stringValue)
+    {
+        this->stringValue = std::make_unique<std::string>(*otherElement.stringValue);
+    }
+    else
+    {
+        this->setValue = std::make_unique<multiset>(*otherElement.setValue);
+    }
+
+    return *this;
+}
+
 std::string &element::getStringValue()
 {
     if (this->stringValue)
@@ -90,7 +104,7 @@ bool element::operator>(const element &otherElement) const
 
     return otherElement < *this;
 }
-
+/*
 std::ostream &operator<<(std::ostream &os, const element &element)
 {
     if (element.stringValue)
@@ -103,4 +117,4 @@ std::ostream &operator<<(std::ostream &os, const element &element)
     }
 
     return os;
-}
+}*/

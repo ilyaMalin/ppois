@@ -26,7 +26,5 @@ int main()
     set.insert(elem3);
     set.insert(elem4);
 
-    std::cout << set << std::endl;
-
-    std::cout << set.buildBoolean();
+    std::cout << "good\n";
 }
