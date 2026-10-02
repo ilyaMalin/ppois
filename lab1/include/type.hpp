@@ -29,7 +29,7 @@ public:
     bool operator<(const element &) const;
     bool operator>(const element &) const;
 
-    //friend std::ostream &operator<<(std::ostream &, const element &);
+    friend std::ostream &operator<<(std::ostream &, const element &);
 };
 
 #endif

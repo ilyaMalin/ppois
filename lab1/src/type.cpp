@@ -104,7 +104,7 @@ bool element::operator>(const element &otherElement) const
 
     return otherElement < *this;
 }
-/*
+
 std::ostream &operator<<(std::ostream &os, const element &element)
 {
     if (element.stringValue)
@@ -117,4 +117,4 @@ std::ostream &operator<<(std::ostream &os, const element &element)
     }
 
     return os;
-}*/
+}

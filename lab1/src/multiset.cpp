@@ -5,7 +5,6 @@ multiset::multiset(const char *stringC)
     element elem;
     elem.setStringValue(stringC);
     this->insert(elem);
-    std::cout << "Constructor param=const char *\n";
 }
 
 multiset::multiset(std::string &string)
@@ -13,7 +12,11 @@ multiset::multiset(std::string &string)
     element elem;
     elem.setStringValue(string);
     this->insert(elem);
-    std::cout << "Constructor param=const string &\n";
+}
+
+multiset::multiset(const element &otherElement)
+{
+    this->insert(otherElement);
 }
 
 multiset::multiset(const multiset &otherSet)
@@ -42,6 +45,13 @@ void multiset::insert(const element &element)
 {
     this->multiplicity[element]++;
     this->cardinal++;
+}
+
+void multiset::insert(const multiset &otherSet)
+{
+    element elem;
+    elem.setSetValue(otherSet);
+    this->insert(elem);
 }
 
 void multiset::remove(const element &otherElement)
@@ -203,46 +213,62 @@ bool multiset::operator>(const multiset &otherSet) const
     return this->multiplicity > otherSet.multiplicity;
 }
 
-/*
 multiset multiset::buildBoolean()
 {
-    size_t countElement = this->cardinality();
-    size_t countSubset = 1 << countElement;
-
+    multiset emptySet;
     multiset boolean;
-    boolean.set.resize(countSubset);
 
-    for (size_t i = 0; i < countSubset; i++)
+    boolean.insert(emptySet);
+
+    for (const auto &iteratorThisSet : this->multiplicity)
     {
-        multiset subSet;
-        for (size_t j = 0; j < countElement; j++)
+        multiset group = boolean;
+        size_t multipl = iteratorThisSet.second;
+
+        multiset currentSubSet(iteratorThisSet.first);
+        while (multipl != 0)
         {
-            if (i & (1 << j))
+            for (const auto &iteratorGroup : boolean.multiplicity)
             {
-                subSet.insert(this->set[j]);
+                multiset combination = *iteratorGroup.first.getSetValue();
+
+                combination += currentSubSet;
+                group.insert(combination);
             }
+
+            multipl--;
+            currentSubSet.insert(iteratorThisSet.first);
         }
 
-        boolean.set[i].setSetValue(subSet);
+        boolean = group;
     }
 
     return boolean;
 }
-*/
-/*std::ostream &operator<<(std::ostream &os, const multiset &multiset)
+
+std::ostream &operator<<(std::ostream &os, const multiset &multiset)
 {
     os << '{';
-    for (size_t i = 0; i < multiset.set.size(); ++i)
-    {
-        if (i > 0)
-        {
-            os << ", ";
-        }
 
-        os << multiset.set[i];
+    bool flag = false;
+    for (const auto &iterator : multiset.multiplicity)
+    {
+        size_t multipl = iterator.second;
+
+        while (multipl != 0)
+        {
+            if (flag)
+            {
+                std::cout << ", ";
+            }
+
+            os << iterator.first;
+            multipl--;
+            flag = true;
+        }
     }
 
     os << '}';
 
     return os;
-}*/
+}

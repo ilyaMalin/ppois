@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include "type.hpp"
 #include <map>
+#include <stack>
 
 class multiset
 {
@@ -15,11 +16,13 @@ public:
     multiset() = default;
     multiset(const char *);
     multiset(std::string &);
+    multiset(const element &);
     multiset(const multiset &);
 
     bool empty() const;
 
     void insert(const element &);
+    void insert(const multiset &);
     void remove(const element &);
 
     size_t cardinality() const;
@@ -39,9 +42,9 @@ public:
     bool operator<(const multiset &) const;
     bool operator>(const multiset &) const;
 
-    // multiset buildBoolean();
+    multiset buildBoolean();
 
-    // friend std::ostream &operator<<(std::ostream &, const multiset &);
+    friend std::ostream &operator<<(std::ostream &, const multiset &);
 };
 
 #endif
