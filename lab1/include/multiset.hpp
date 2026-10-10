@@ -1,10 +1,8 @@
 #ifndef MULTISET_HPP
 
 #define MULTISET_HPP
-#include <stdexcept>
 #include "type.hpp"
 #include <map>
-#include <stack>
 
 class multiset
 {
@@ -12,12 +10,16 @@ private:
     std::map<element, size_t> multiplicity;
     size_t cardinal = 0;
 
+    bool parser(const std::string &, int &);
+
 public:
     multiset() = default;
-    multiset(const char *);
-    multiset(std::string &);
-    multiset(const element &);
+    explicit multiset(const char *);
+    explicit multiset(std::string &);
+    explicit multiset(const element &);
     multiset(const multiset &);
+
+    multiset &operator=(const multiset &);
 
     bool empty() const;
 
@@ -45,6 +47,24 @@ public:
     multiset buildBoolean();
 
     friend std::ostream &operator<<(std::ostream &, const multiset &);
+    friend std::istream &operator>>(std::istream &, multiset &);
+};
+
+class storageMultiset
+{
+private:
+    std::map<std::string, multiset> storage;
+
+public:
+    multiset &operator[](const std::string &);
+
+    bool insert(const std::string &, const multiset &);
+    bool remove(const std::string &);
+
+    bool empty() const;
+
+    std::map<std::string, multiset>::iterator begin();
+    std::map<std::string, multiset>::iterator end();
 };
 
 #endif

@@ -18,7 +18,7 @@ public:
     element(const element &);
     element &operator=(const element &);
 
-    std::string &getStringValue();
+    std::string *getStringValue() const;
     multiset *getSetValue() const;
 
     void setStringValue(const std::string &);

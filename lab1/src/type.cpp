@@ -1,5 +1,5 @@
-#include "../include/type.hpp"
-#include "../include/multiset.hpp"
+#include "type.hpp"
+#include "multiset.hpp"
 
 element::element(const element &other)
 {
@@ -27,24 +27,14 @@ element &element::operator=(const element &otherElement)
     return *this;
 }
 
-std::string &element::getStringValue()
+std::string *element::getStringValue() const
 {
-    if (this->stringValue)
-    {
-        return *this->stringValue;
-    }
-
-    throw std::runtime_error("elementValue != string");
+    return this->stringValue.get();
 }
 
 multiset *element::getSetValue() const
 {
-    if (this->setValue)
-    {
-        return this->setValue.get();
-    }
-
-    return nullptr;
+    return this->setValue.get();
 }
 
 void element::setStringValue(const std::string &stringValue)
