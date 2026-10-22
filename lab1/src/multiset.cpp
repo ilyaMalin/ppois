@@ -9,7 +9,7 @@ bool multiset::parser(const std::string &stringElement, int &pos)
 
     pos++;
 
-    while (pos < stringElement.size())
+    while (static_cast<size_t>(pos) < stringElement.size())
     {
         if (stringElement[pos] == '}')
         {
@@ -27,7 +27,7 @@ bool multiset::parser(const std::string &stringElement, int &pos)
         else
         {
             std::string string = "";
-            while (pos < stringElement.size() &&
+            while (static_cast<size_t>(pos) < stringElement.size() &&
                    stringElement[pos] != ',' && stringElement[pos] != '{' && stringElement[pos] != '}')
             {
                 string += stringElement[pos++];
@@ -41,12 +41,12 @@ bool multiset::parser(const std::string &stringElement, int &pos)
             }
         }
 
-        if (pos < stringElement.size() && stringElement[pos] == ',')
+        if (static_cast<size_t>(pos) < stringElement.size() && stringElement[pos] == ',')
         {
             pos++;
         }
 
-        while (pos < stringElement.size() && stringElement[pos] == ' ')
+        while (static_cast<size_t>(pos) < stringElement.size() && stringElement[pos] == ' ')
         {
             pos++;
         }
@@ -368,9 +368,13 @@ multiset &storageMultiset::operator[](const std::string &nameSet)
 {
     auto iterator = this->storage.find(nameSet);
 
-    if (iterator != this->storage.end())
+    try
     {
         return iterator->second;
+    }
+    catch (const std::exception &)
+    {
+        throw std::runtime_error("Out of raneg!");
     }
 }
 
