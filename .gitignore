@@ -1,3 +1,5 @@
 *.txt
-Makefile
+!CMakeLists.txt
+/lab1/build/
+/lab1/docs/generated/
 *.exe
