@@ -151,6 +151,7 @@ void UI::saver(const multiset &set)
     }
     else
     {
+        std::cout << "Result: " << set << std::endl;
         std::cout << "The set is not saved!\n";
     }
 }
@@ -394,7 +395,7 @@ void UIPost::menu()
         case 1:
         {
             std::cin.ignore();
-            std::cout << "Enter path to file.txt: ";
+            std::cout << "Enter absolute path to file.txt: ";
             std::string path;
             std::getline(std::cin, path);
 
