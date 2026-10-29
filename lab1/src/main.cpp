@@ -1,4 +1,5 @@
-#include "ui.hpp"
+#include "uiMultiset.hpp"
+#include "uiPost.hpp"
 
 int main()
 {
@@ -8,7 +9,7 @@ int main()
 
     if (choice == 0)
     {
-        UI ui;
+        UIMultiset ui;
         ui.menu();
     }
     else if (choice == 1)

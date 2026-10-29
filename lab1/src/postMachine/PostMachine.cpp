@@ -1,122 +1,5 @@
 #include "PostMachine.hpp"
 
-rule &rule::operator=(const rule &otherRule)
-{
-    this->symbol = otherRule.symbol;
-    this->numberNextCommand = otherRule.numberNextCommand;
-    this->altNumberNextCommand = otherRule.altNumberNextCommand;
-
-    return *this;
-}
-
-void rule::setRule(ALPHABET &symbol, const int &nextCommand, const int &altNextCommand = -1)
-{
-    this->symbol = symbol;
-    this->numberNextCommand = nextCommand;
-    this->altNumberNextCommand = altNextCommand;
-}
-
-ALPHABET rule::getSymbol() const
-{
-    return this->symbol;
-}
-
-int rule::getNextCommand() const
-{
-    return this->numberNextCommand;
-}
-
-int rule::getAltNextCommand() const
-{
-    return this->altNumberNextCommand;
-}
-
-std::ostream &operator<<(std::ostream &os, const rule &rule)
-{
-    os << static_cast<char>(rule.symbol) << rule.numberNextCommand;
-
-    if (rule.altNumberNextCommand != -1)
-    {
-        os << ';' << rule.altNumberNextCommand;
-    }
-
-    return os;
-}
-
-tape::tape(std::ifstream &file)
-{
-    std::string tapeString;
-    if (!std::getline(file, tapeString))
-    {
-        throw std::runtime_error("File can't be empty!\n");
-    }
-
-    this->tape_.clear();
-
-    for (const char &cell : tapeString)
-    {
-        this->tape_.push_back(cell);
-    }
-}
-
-tape::tape(const std::string &tapeString)
-{
-    this->tape_.clear();
-
-    for (const char &cell : tapeString)
-    {
-        this->tape_.push_back(cell);
-    }
-}
-
-tape &tape::operator=(const tape &otherTape)
-{
-    this->tape_ = otherTape.tape_;
-
-    return *this;
-}
-
-int tape::size() const
-{
-    return this->tape_.size();
-}
-
-void tape::setMark(const int &index)
-{
-    this->tape_[index] = '1';
-}
-
-void tape::removeMark(const int &index)
-{
-    this->tape_[index] = '0';
-}
-
-char &tape::operator[](const int &index)
-{
-    return this->tape_[index];
-}
-
-std::ostream &operator<<(std::ostream &os, tape &tape)
-{
-    for (size_t i = 0; i < tape.tape_.size(); i++)
-    {
-        os << tape[i];
-    }
-
-    return os;
-}
-
-std::istream &operator>>(std::istream &is, tape &mainTape)
-{
-    std::string path;
-    is >> path;
-
-    tape tempTape(path);
-    mainTape = tempTape;
-
-    return is;
-}
-
 void programm::parser(const std::string &ruleString, ALPHABET &symbol, int &nextCommand, int &altNextCommand)
 {
     size_t i = 0;
@@ -226,7 +109,7 @@ void programm::append(const rule &rule)
 
 void programm::remove(const int &index)
 {
-    if (index >= static_cast<int>(this->rule_.size()))
+    if (index >= static_cast<int>(this->rule_.size()) || index < 0)
     {
         std::cout << "Rule is not found!\n";
         return;
@@ -238,6 +121,12 @@ void programm::remove(const int &index)
 
 void programm::viewRule() const
 {
+    if (this->rule_.size() == 0)
+    {
+        std::cout << "List of rules is empty" << std::endl;
+        return;
+    }
+
     for (size_t i = 0; i < this->rule_.size(); i++)
     {
         std::cout << this->rule_[i] << std::endl;
@@ -246,6 +135,12 @@ void programm::viewRule() const
 
 void programm::viewTape()
 {
+    if (this->tape_.size() == 0)
+    {
+        std::cout << "Tape is empty" << std::endl;
+        return;
+    }
+
     std::cout << this->tape_ << std::endl;
 }
 
