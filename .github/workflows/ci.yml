@@ -1,0 +1,157 @@
+name: C++ CI/CD
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-quality:
+    name: Build, Tests, Cppcheck and Coverage
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+        working-directory: lab1
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2 UCRT64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-make
+            mingw-w64-ucrt-x86_64-gcovr
+            mingw-w64-ucrt-x86_64-cppcheck
+
+      - name: Show toolchain versions
+        run: |
+          g++ --version
+          cmake --version
+          gcov --version
+          gcovr --version
+          cppcheck --version
+
+      # ---------------- BUILD AND TESTS ----------------
+
+      - name: Configure coverage build
+        run: >-
+          cmake -S . -B build/cvrg -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          -DENABLE_COVERAGE=ON
+
+      - name: Build tests
+        run: cmake --build build/cvrg --target test --parallel 8
+
+      - name: Run UnitTest++
+        run: ./build/cvrg/test.exe
+
+      # ---------------- STATIC ANALYSIS ----------------
+
+      - name: Run Cppcheck
+        run: >-
+          cppcheck
+          --enable=warning,style,performance,portability
+          --std=c++20
+          --language=c++
+          --suppress=missingIncludeSystem
+          --suppress=knownConditionTrueFalse
+          --suppress=useStlAlgorithm
+          --error-exitcode=1
+          -I include
+          -I include/cli
+          -I include/multiset
+          -I include/postMachine
+          src
+
+      # ---------------- CODE COVERAGE ----------------
+
+      - name: Check code coverage
+        run: >-
+          gcovr --root .
+          --object-directory build/cvrg
+          --filter 'src/'
+          --filter 'include/'
+          --exclude-throw-branches
+          --exclude-unreachable-branches
+          --fail-under-line 90
+          --fail-under-function 90
+          --fail-under-branch 90
+          --html-details build/cvrg/coverage.html
+          --print-summary
+
+      # ---------------- RELEASE BUILD ----------------
+
+      - name: Configure release build
+        run: >-
+          cmake -S . -B build/release -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++"
+
+      - name: Build release executable
+        run: cmake --build build/release --target main --parallel 8
+
+      - name: Prepare executable
+        run: |
+          mkdir -p dist
+          cp build/release/main.exe dist/ppois-windows-x64.exe
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v7
+        with:
+          name: ppois-windows-x64
+          path: lab1/dist/ppois-windows-x64.exe
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: ppois-coverage-report
+          path: lab1/build/cvrg/coverage.html
+          if-no-files-found: error
+          retention-days: 14
+
+  # ---------------- GITHUB RELEASE ----------------
+
+  publish-release:
+    name: Publish GitHub Release
+
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    needs: build-test-quality
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download executable
+        uses: actions/download-artifact@v8
+        with:
+          name: ppois-windows-x64
+          path: dist
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/ppois-windows-x64.exe
+          generate_release_notes: true
