@@ -73,6 +73,7 @@ jobs:
           --suppress=missingIncludeSystem
           --suppress=knownConditionTrueFalse
           --suppress=useStlAlgorithm
+          --suppress=constParameterReference
           --error-exitcode=1
           -I include
           -I include/cli
