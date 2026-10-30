@@ -62,7 +62,7 @@ multiset::multiset(const char *stringC)
     this->parser(elem, i);
 }
 
-multiset::multiset(std::string &string)
+multiset::multiset(const std::string &string)
 {
     int i = 0;
     this->parser(string, i);
@@ -148,7 +148,7 @@ multiset &multiset::operator+=(const multiset &otherSet)
 {
     for (const auto &iterator : otherSet.multiplicity)
     {
-        size_t &multiplThisElement = this->multiplicity[iterator.first];
+        const size_t &multiplThisElement = this->multiplicity[iterator.first];
         this->multiplicity[iterator.first] = std::max(iterator.second, multiplThisElement);
     }
 

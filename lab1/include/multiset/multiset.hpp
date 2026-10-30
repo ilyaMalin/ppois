@@ -34,7 +34,7 @@ public:
     /**
      * @brief Создаёт мультимножество из строки.
      */
-    explicit multiset(std::string &);
+    explicit multiset(const std::string &);
 
     /**
      * @brief Создаёт мультимножество, содержащее один элемент.

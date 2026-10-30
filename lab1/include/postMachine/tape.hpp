@@ -26,12 +26,12 @@ public:
     /**
      * @brief Создаёт ленту из первой строки входного файла.
      */
-    tape(std::ifstream &);
+    explicit tape(std::ifstream &);
 
     /**
      * @brief Создаёт ленту из строкового представления.
      */
-    tape(const std::string &);
+    explicit tape(const std::string &);
 
     /**
      * @brief Копирует содержимое другой ленты.

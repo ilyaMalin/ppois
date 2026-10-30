@@ -9,9 +9,9 @@ rule &rule::operator=(const rule &otherRule)
     return *this;
 }
 
-void rule::setRule(ALPHABET &symbol, const int &nextCommand, const int &altNextCommand = -1)
+void rule::setRule(ALPHABET &newSymbol, const int &nextCommand, const int &altNextCommand = -1)
 {
-    this->symbol = symbol;
+    this->symbol = newSymbol;
     this->numberNextCommand = nextCommand;
     this->altNumberNextCommand = altNextCommand;
 }

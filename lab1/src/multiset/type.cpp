@@ -1,6 +1,10 @@
 #include "type.hpp"
 #include "multiset.hpp"
 
+element::element() = default;
+
+element::~element() = default;
+
 element::element(const element &other)
 {
     if (other.stringValue)
@@ -37,19 +41,19 @@ multiset *element::getSetValue() const
     return this->setValue.get();
 }
 
-void element::setStringValue(const std::string &stringValue)
+void element::setStringValue(const std::string &value)
 {
-    this->stringValue = std::make_unique<std::string>(stringValue);
+    this->stringValue = std::make_unique<std::string>(value);
 }
 
-void element::setStringValue(const char *stringCValue)
+void element::setStringValue(const char *cvalue)
 {
-    this->stringValue = std::make_unique<std::string>(stringCValue);
+    this->stringValue = std::make_unique<std::string>(cvalue);
 }
 
-void element::setSetValue(const multiset &setValue)
+void element::setSetValue(const multiset &value)
 {
-    this->setValue = std::make_unique<multiset>(setValue);
+    this->setValue = std::make_unique<multiset>(value);
 }
 
 bool element::operator==(const element &otherElement) const
@@ -69,20 +73,23 @@ bool element::operator==(const element &otherElement) const
 
 bool element::operator<(const element &otherElement) const
 {
-    if (this->stringValue && otherElement.setValue)
+    bool thisEmpty = !this->stringValue && !this->setValue;
+    bool otherEmpty = !otherElement.stringValue && !otherElement.setValue;
+
+    if (thisEmpty || otherEmpty)
     {
-        return false;
+        return thisEmpty && !otherEmpty;
     }
     else if (this->stringValue && otherElement.stringValue)
     {
         return *this->stringValue < *otherElement.stringValue;
     }
-    else if (this->setValue && otherElement.stringValue)
+    else if (this->setValue && otherElement.setValue)
     {
-        return true;
+        return *this->setValue < *otherElement.setValue;
     }
 
-    return *this->setValue < *otherElement.setValue;
+    return static_cast<bool>(this->setValue);
 }
 
 bool element::operator>(const element &otherElement) const

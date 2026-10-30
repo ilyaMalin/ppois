@@ -108,10 +108,10 @@ void UIPost::menu()
         {
             std::cin.ignore();
             std::cout << "Enter path to file.txt: ";
-            std::string path;
 
             try
             {
+                std::string path;
                 std::getline(std::cin, path);
 
                 this->parser(path);

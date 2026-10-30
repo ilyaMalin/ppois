@@ -48,7 +48,7 @@ void programm::parser(std::ifstream &file)
     }
 }
 
-void programm::parser(std::vector<std::string> &tapeString)
+void programm::parser(const std::vector<std::string> &tapeString)
 {
     for (const auto &currentRule : tapeString)
     {
@@ -63,7 +63,7 @@ void programm::parser(std::vector<std::string> &tapeString)
     }
 }
 
-programm::programm(const std::string &tapeString, std::vector<std::string> &ruleString) : tape_(tapeString)
+programm::programm(const std::string &tapeString, const std::vector<std::string> &ruleString) : tape_(tapeString)
 {
     this->parser(ruleString);
 }
@@ -204,13 +204,13 @@ bool programm::step(int &nextCommand, int &carriage)
     return true;
 }
 
-void programm::performOperations(bool flog)
+void programm::performOperations(bool showLog)
 {
     int carriage = 0;
     int nextCommand = 0;
     while (this->step(nextCommand, carriage))
     {
-        if (flog)
+        if (showLog)
         {
             std::cout << this->tape_ << std::endl;
         }

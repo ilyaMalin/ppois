@@ -28,14 +28,12 @@ multiset &storageMultiset::operator[](const std::string &nameSet)
 {
     auto iterator = this->storage.find(nameSet);
 
-    try
-    {
-        return iterator->second;
-    }
-    catch (const std::exception &)
+    if (iterator == this->storage.end())
     {
         throw std::runtime_error("Out of range!");
     }
+
+    return iterator->second;
 }
 
 std::map<std::string, multiset>::iterator storageMultiset::begin()

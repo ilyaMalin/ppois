@@ -46,7 +46,7 @@ private:
      * Оператор '*' имеет приоритет 2, '+' — 1, '-' — 0.
      * Для остальных символов возвращается -1.
      */
-    int getPriorityOperation(const char &) const;
+    static int getPriorityOperation(const char &);
 
     /**
      * @brief Преобразует выражение из инфиксной формы в постфиксную.
@@ -56,7 +56,7 @@ private:
      * разделяются символом '_'.
      * @return true после завершения обработки выражения.
      */
-    bool parser(const std::string &, std::string &) const;
+    static bool parser(const std::string &, std::string &);
 
     /**
      * @brief Вычисляет постфиксное выражение над мультимножествами.

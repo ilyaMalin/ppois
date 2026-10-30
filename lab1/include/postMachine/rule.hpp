@@ -44,7 +44,7 @@ enum class ALPHABET
 class rule
 {
 private:
-    ALPHABET symbol;
+    ALPHABET symbol = ALPHABET::STOP;
     int numberNextCommand = -1;
     int altNumberNextCommand = -1;
 

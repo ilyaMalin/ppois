@@ -1,6 +1,6 @@
 #include "uiMultiset.hpp"
 
-int UIMultiset::getPriorityOperation(const char &operation) const
+int UIMultiset::getPriorityOperation(const char &operation)
 {
     switch (operation)
     {
@@ -15,7 +15,7 @@ int UIMultiset::getPriorityOperation(const char &operation) const
     return -1;
 }
 
-bool UIMultiset::parser(const std::string &expression, std::string &processedExpression) const
+bool UIMultiset::parser(const std::string &expression, std::string &processedExpression)
 {
     std::stack<char> operation;
     std::map<char, bool> listOperation = {{'+', true}, {'*', true}, {'-', true}, {'(', true}, {')', true}};

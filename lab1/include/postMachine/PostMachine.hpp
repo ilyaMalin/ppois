@@ -20,12 +20,12 @@ private:
     /**
      * @brief Разбирает строковое представление одной команды.
      */
-    void parser(const std::string &, ALPHABET &, int &, int &);
+    static void parser(const std::string &, ALPHABET &, int &, int &);
 
     /**
      * @brief Разбирает последовательность строк с командами.
      */
-    void parser(std::vector<std::string> &);
+    void parser(const std::vector<std::string> &);
 
     /**
      * @brief Считывает команды из входного файла.
@@ -50,13 +50,13 @@ public:
     /**
      * @brief Создаёт программу, считывая ленту и команды из файла.
      */
-    programm(std::ifstream &);
+    explicit programm(std::ifstream &);
 
     /**
      * @brief Создаёт программу из строкового представления ленты
      * и последовательности строк с командами.
      */
-    programm(const std::string &, std::vector<std::string> &);
+    programm(const std::string &, const std::vector<std::string> &);
 
     /**
      * @brief Копирует команды и ленту другой программы.

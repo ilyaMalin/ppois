@@ -17,13 +17,18 @@ class element
 {
 private:
     std::unique_ptr<std::string> stringValue = nullptr;
-    std::unique_ptr<multiset> setValue = nullptr;
+    std::unique_ptr<multiset> setValue;
 
 public:
     /**
      * @brief Создаёт элемент без значения.
      */
-    element() = default;
+    element();
+
+    /**
+     * @brief Очищает память, занятую под элемент
+     */
+    ~element();
 
     /**
      * @brief Создаёт копию другого элемента.
