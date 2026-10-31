@@ -47,7 +47,6 @@ jobs:
           gcovr --version
           cppcheck --version
 
-      # ---------------- BUILD AND TESTS ----------------
 
       - name: Configure coverage build
         run: >-
@@ -61,8 +60,6 @@ jobs:
 
       - name: Run UnitTest++
         run: ./build/cvrg/test.exe
-
-      # ---------------- STATIC ANALYSIS ----------------
 
       - name: Run Cppcheck
         run: >-
@@ -81,8 +78,6 @@ jobs:
           -I include/postMachine
           src
 
-      # ---------------- CODE COVERAGE ----------------
-
       - name: Check code coverage
         run: >-
           gcovr --root .
@@ -96,8 +91,6 @@ jobs:
           --fail-under-branch 90
           --html-details build/cvrg/coverage.html
           --print-summary
-
-      # ---------------- RELEASE BUILD ----------------
 
       - name: Configure release build
         run: >-
@@ -129,8 +122,6 @@ jobs:
           path: lab1/build/cvrg/coverage.html
           if-no-files-found: error
           retention-days: 14
-
-  # ---------------- GITHUB RELEASE ----------------
 
   publish-release:
     name: Publish GitHub Release
