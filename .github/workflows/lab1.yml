@@ -1,20 +1,30 @@
-name: C++ CI/CD
+name: LAB1 CI/CD
 
 on:
   push:
     branches:
-      - "**"
+      - "lab1"
+      - "main"
     tags:
-      - "v*"
+      - "v*"   
+    paths:
+      - 'lab1/**'
+      - '.github/workflows/lab1.yml'
+
   pull_request:
+    branches:
+      - main
+    paths:
+      - 'lab1/**'
+      - '.github/workflows/lab1.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  build-test-quality:
-    name: Build, Tests, Cppcheck and Coverage
+  test:
+    name: Build, test, lint and coverage
     runs-on: windows-latest
 
     defaults:
@@ -26,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Set up MSYS2 UCRT64
+      - name: Install dependencies
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
@@ -47,9 +57,7 @@ jobs:
           gcovr --version
           cppcheck --version
 
-      # ---------------- BUILD AND TESTS ----------------
-
-      - name: Configure coverage build
+      - name: Configure Debug
         run: >-
           cmake -S . -B build/cvrg -G "MinGW Makefiles"
           -DCMAKE_BUILD_TYPE=Debug
@@ -61,8 +69,6 @@ jobs:
 
       - name: Run UnitTest++
         run: ./build/cvrg/test.exe
-
-      # ---------------- STATIC ANALYSIS ----------------
 
       - name: Run Cppcheck
         run: >-
@@ -81,8 +87,6 @@ jobs:
           -I include/postMachine
           src
 
-      # ---------------- CODE COVERAGE ----------------
-
       - name: Check code coverage
         run: >-
           gcovr --root .
@@ -97,28 +101,26 @@ jobs:
           --html-details build/cvrg/coverage.html
           --print-summary
 
-      # ---------------- RELEASE BUILD ----------------
-
-      - name: Configure release build
+      - name: Configure Release
         run: >-
           cmake -S . -B build/release -G "MinGW Makefiles"
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++"
 
-      - name: Build release executable
+      - name: Build Release executable
         run: cmake --build build/release --target main --parallel 8
 
-      - name: Prepare executable
+      - name: Prepare release files
         run: |
           mkdir -p dist
-          cp build/release/main.exe dist/ppois-windows-x64.exe
+          cp build/release/main.exe dist/main.exe
 
       - name: Upload executable
         uses: actions/upload-artifact@v7
         with:
-          name: ppois-windows-x64
-          path: lab1/dist/ppois-windows-x64.exe
+          name: lab1
+          path: lab1/dist/main.exe
           if-no-files-found: error
           retention-days: 14
 
@@ -130,16 +132,11 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  # ---------------- GITHUB RELEASE ----------------
-
-  publish-release:
-    name: Publish GitHub Release
-
-    if: startsWith(github.ref, 'refs/tags/v')
-
-    needs: build-test-quality
-
-    runs-on: ubuntu-latest
+  release:
+    name: Create GitHub Release
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
 
     permissions:
       contents: write
@@ -148,11 +145,13 @@ jobs:
       - name: Download executable
         uses: actions/download-artifact@v8
         with:
-          name: ppois-windows-x64
+          name: main
           path: dist
 
-      - name: Publish release
+      - name: Publish Release
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/ppois-windows-x64.exe
+          tag_name: ${{ github.ref_name }}
+          name: Lab 1 ${{ github.ref_name }}
           generate_release_notes: true
+          files: dist/main.exe
