@@ -145,7 +145,7 @@ jobs:
       - name: Download executable
         uses: actions/download-artifact@v8
         with:
-          name: main
+          name: lab1
           path: dist
 
       - name: Publish Release
