@@ -6,7 +6,7 @@ on:
       - lab1
     paths:
       - "lab1/**"
-      - ".github/workflows/doxygen.yml"
+      - ".github/workflows/doxygenLab1.yml"
   workflow_dispatch:
 
 permissions:
