@@ -1,0 +1,157 @@
+name: LAB2 CI/CD
+
+on:
+  push:
+    branches:
+      - "lab2"
+      - "main"
+    tags:
+      - "v*"   
+    paths:
+      - 'lab1/**'
+      - '.github/workflows/lab2.yml'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'lab2/**'
+      - '.github/workflows/lab2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Build, test, lint and coverage
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+        working-directory: lab2
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-make
+            mingw-w64-ucrt-x86_64-gcovr
+            mingw-w64-ucrt-x86_64-cppcheck
+
+      - name: Show toolchain versions
+        run: |
+          g++ --version
+          cmake --version
+          gcov --version
+          gcovr --version
+          cppcheck --version
+
+      - name: Configure Debug
+        run: >-
+          cmake -S . -B build/cvrg -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          -DENABLE_COVERAGE=ON
+
+      - name: Build tests
+        run: cmake --build build/cvrg --target test --parallel 8
+
+      - name: Run UnitTest++
+        run: ./build/cvrg/test.exe
+
+      - name: Run Cppcheck
+        run: >-
+          cppcheck
+          --enable=warning,style,performance,portability
+          --std=c++20
+          --language=c++
+          --suppress=missingIncludeSystem
+          --suppress=knownConditionTrueFalse
+          --suppress=useStlAlgorithm
+          --suppress=constParameterReference
+          --error-exitcode=1
+          -I include
+          -I include/cli
+          -I include/multiset
+          -I include/postMachine
+          src
+
+      - name: Check code coverage
+        run: >-
+          gcovr --root .
+          --object-directory build/cvrg
+          --filter 'src/'
+          --filter 'include/'
+          --exclude-throw-branches
+          --exclude-unreachable-branches
+          --fail-under-line 90
+          --fail-under-function 90
+          --fail-under-branch 90
+          --html-details build/cvrg/coverage.html
+          --print-summary
+
+      - name: Configure Release
+        run: >-
+          cmake -S . -B build/release -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++"
+
+      - name: Build Release executable
+        run: cmake --build build/release --target main --parallel 8
+
+      - name: Prepare release files
+        run: |
+          mkdir -p dist
+          cp build/release/main.exe dist/main.exe
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v7
+        with:
+          name: lab2
+          path: lab2/dist/main.exe
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: lab2-coverage-report
+          path: lab2/build/cvrg/coverage.html
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Create GitHub Release
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download executable
+        uses: actions/download-artifact@v8
+        with:
+          name: lab2
+          path: dist
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Lab 2 ${{ github.ref_name }}
+          generate_release_notes: true
+          files: dist/main.exe
