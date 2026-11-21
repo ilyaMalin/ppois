@@ -1,5 +1,7 @@
 *.txt
 !CMakeLists.txt
-/lab1/build/
+build/
 /lab1/docs/generated/
 *.vscode
+*.md
+!README.md
