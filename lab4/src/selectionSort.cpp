@@ -16,16 +16,9 @@ void selectionSort(int _start, int _end, T *_array, std::function<bool(const T &
 
         for (int j = i + 1; j < _end; j++)
         {
-            try
+            if (_condition(_array[j], _array[_swappedElement]))
             {
-                if (_condition(_array[j], _array[_swappedElement]))
-                {
-                    _swappedElement = j;
-                }
-            }
-            catch (const std::exception &rangeExcp)
-            {
-                throw std::range_error("Выход за его пределы!\n");
+                _swappedElement = j;
             }
         }
 
@@ -34,4 +27,37 @@ void selectionSort(int _start, int _end, T *_array, std::function<bool(const T &
             std::swap(_array[i], _array[_swappedElement]);
         }
     }
+}
+
+template <typename iterator, typename condition>
+void selectionSort(iterator _start, iterator _end, condition _condition)
+{
+    if (_start == _end)
+    {
+        return;
+    }
+
+    for (iterator i = _start; i != _end; i++)
+    {
+        iterator _swappedElement = i;
+
+        for (iterator j = i + 1; j != _end; ++j)
+        {
+            if (_condition(*j, *_swappedElement))
+            {
+                _swappedElement = j;
+            }
+        }
+
+        if (_swappedElement != i)
+        {
+            std::iter_swap(i, _swappedElement);
+        }
+    }
+}
+
+template <typename T, typename condition>
+void selectionSort(std::vector<T> &_vector, condition _condition)
+{
+    selectionSort(_vector.begin(), _vector.end(), _condition);
 }

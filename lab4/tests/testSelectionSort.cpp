@@ -70,3 +70,13 @@ TEST(CHANGEINRANGE)
 
     CHECK_ARRAY_EQUAL(arr1, arr, 5);
 }
+
+TEST(NOCHANGEDEFAULT)
+{
+    int arr[] = {3, 4, 51, 61, 77};
+    int arr1[] = {3, 4, 51, 61, 77};
+
+    selectionSort(0, 5, arr);
+
+    CHECK_ARRAY_EQUAL(arr1, arr, 5);
+}
