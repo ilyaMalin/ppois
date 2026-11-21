@@ -30,7 +30,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-        working-directory: lab1
+        working-directory: lab4
 
     steps:
       - name: Checkout repository
@@ -59,7 +59,7 @@ jobs:
 
       - name: Configure Debug
         run: >-
-          cmake -S . -B build/cvrg -G "MinGW Makefiles"
+          cmake -S . -B build -G "MinGW Makefiles"
           -DCMAKE_BUILD_TYPE=Debug
           -DENABLE_COVERAGE=ON
 
@@ -82,13 +82,13 @@ jobs:
       - name: Check code coverage
         run: >-
           gcovr --root .
-          --object-directory build/cvrg
+          --object-directory build
           --filter 'src/'
           --filter 'include/'
           --fail-under-line 90
           --fail-under-function 90
           --fail-under-branch 90
-          --html-details build/cvrg/coverage.html
+          --html-details build/coverage.html
           --print-summary
 
       - name: Configure Release
@@ -117,7 +117,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lab4-coverage-report
-          path: lab4/build/cvrg/coverage.html
+          path: lab4/build/coverage.html
           if-no-files-found: error
           retention-days: 14
 
