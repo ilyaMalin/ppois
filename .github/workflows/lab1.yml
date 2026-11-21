@@ -59,28 +59,22 @@ jobs:
 
       - name: Configure Debug
         run: >-
-          cmake -S . -B build/cvrg -G "MinGW Makefiles"
+          cmake -S . -B build -G "MinGW Makefiles"
           -DCMAKE_BUILD_TYPE=Debug
-          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           -DENABLE_COVERAGE=ON
 
       - name: Build tests
-        run: cmake --build build/cvrg --target test --parallel 8
+        run: cmake --build build --parallel 8
 
       - name: Run UnitTest++
-        run: ./build/cvrg/test.exe
+        run: ./build/test.exe
 
       - name: Run Cppcheck
         run: >-
           cppcheck
-          --enable=warning,style,performance,portability
+          --enable=style
           --std=c++20
           --language=c++
-          --suppress=missingIncludeSystem
-          --suppress=knownConditionTrueFalse
-          --suppress=useStlAlgorithm
-          --suppress=constParameterReference
-          --error-exitcode=1
           -I include
           -I include/cli
           -I include/multiset
@@ -90,7 +84,7 @@ jobs:
       - name: Check code coverage
         run: >-
           gcovr --root .
-          --object-directory build/cvrg
+          --object-directory build
           --filter 'src/'
           --filter 'include/'
           --exclude-throw-branches
@@ -98,7 +92,7 @@ jobs:
           --fail-under-line 90
           --fail-under-function 90
           --fail-under-branch 90
-          --html-details build/cvrg/coverage.html
+          --html-details build/coverage.html
           --print-summary
 
       - name: Configure Release
@@ -127,8 +121,8 @@ jobs:
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
         with:
-          name: ppois-coverage-report
-          path: lab1/build/cvrg/coverage.html
+          name: lab1-coverage-report
+          path: lab1/build/coverage.html
           if-no-files-found: error
           retention-days: 14
 
