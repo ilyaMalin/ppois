@@ -1,6 +1,6 @@
-#ifndef SORT_HPP
+#ifndef SELECTIONSORT_HPP
 
-#define SORT_HPP
+#define SELECTIONSORT_HPP
 #include <iterator>
 #include <vector>
 #include <functional>

@@ -10,7 +10,7 @@ void selectionSort(int _start, int _end, T *_array, std::function<bool(const T &
         throw std::range_error("Пустой массив или выход за его пределы!\n");
     }
 
-    for (int i = _start; i <= _end; i++)
+    for (int i = _start; i < _end; i++)
     {
         int _swappedElement = i;
 

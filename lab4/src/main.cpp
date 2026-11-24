@@ -6,19 +6,19 @@ constexpr int MAXSIZE = 6;
 
 int main()
 {
+    /*
+        std::vector<int> vec = {4, 51, 512, 65, 1, 5, 5};
 
-    std::vector<int> vec = {4, 51, 512, 65, 1, 5, 5};
+        selectionSort(vec, [](int a, int b)
+                      { return a > b; });
 
-    selectionSort(vec, [](int a, int b)
-                  { return a > b; });
+        for (auto it = vec.begin(); it != vec.end(); it++)
+        {
+            std::cout << *it << " ";
+        }
 
-    for (auto it = vec.begin(); it != vec.end(); it++)
-    {
-        std::cout << *it << " ";
-    }
-
-    std::cout << std::endl;
-
+        std::cout << std::endl;
+    */
     /*
     char arr[MAXSIZE] = {'g', 'a', 'c', 'e', 'f', 'd'};
 
