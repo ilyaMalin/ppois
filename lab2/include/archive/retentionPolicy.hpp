@@ -11,10 +11,10 @@ class retentionPolicy
     documentType *documentTypeRef = nullptr;
 
 public:
-    retentionPolicy(std::string id = {}, std::string name = {});
+    retentionPolicy(std::string = {}, std::string = {});
     const std::string &getName() const;
     const std::string &getStatus() const;
     bool validateRetentionPolicy() const;
     void applyRetentionPolicy();
-    void linkDocumentType(documentType &value);
+    void linkDocumentType(documentType &);
 };

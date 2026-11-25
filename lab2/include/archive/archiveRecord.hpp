@@ -11,10 +11,10 @@ class archiveRecord
     document *documentRef = nullptr;
 
 public:
-    archiveRecord(std::string id = {}, std::string name = {});
+    archiveRecord(std::string = {}, std::string = {});
     const std::string &getName() const;
     const std::string &getStatus() const;
     bool validateArchiveRecord() const;
     void archiveDocument();
-    void linkDocument(document &value);
+    void linkDocument(document &);
 };

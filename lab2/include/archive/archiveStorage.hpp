@@ -11,10 +11,10 @@ class archiveStorage
     fileStorage *fileStorageRef = nullptr;
 
 public:
-    archiveStorage(std::string id = {}, std::string name = {});
+    archiveStorage(std::string = {}, std::string = {});
     const std::string &getName() const;
     const std::string &getStatus() const;
     bool validateArchiveStorage() const;
     void openArchiveStorage();
-    void linkFileStorage(fileStorage &value);
+    void linkFileStorage(fileStorage &);
 };
