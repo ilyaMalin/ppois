@@ -1,4 +1,5 @@
 #include "selectionSort.hpp"
+#include "bucketSort.hpp"
 #include <iostream>
 #include <vector>
 
@@ -6,6 +7,17 @@ constexpr int MAXSIZE = 6;
 
 int main()
 {
+
+    std::vector<int> _arr = {42, 15, 87, 23, 56, 91, 34, 68};
+
+    bucketSort(_arr, 10, [](int _value)
+               { return _value / 20; }, std::less<>());
+
+    for (int _value : _arr)
+    {
+        std::cout << _value << ' ';
+    }
+
     /*
         std::vector<int> vec = {4, 51, 512, 65, 1, 5, 5};
 
