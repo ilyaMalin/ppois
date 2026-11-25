@@ -11,6 +11,6 @@ void bucketSort(iterator, iterator, std::size_t, bucketIndex, condition = condit
 template <typename T, typename bucketIndex, typename condition = std::less<>>
 void bucketSort(std::vector<T> &, std::size_t, bucketIndex, condition = condition{});
 
-#include "../src/bucketSort.cpp"
+#include "../../src/sort/bucketSort.cpp"
 
 #endif

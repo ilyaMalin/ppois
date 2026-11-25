@@ -15,6 +15,6 @@ void selectionSort(iterator, iterator, condition = condition());
 template <typename T, typename condition = std::less<>>
 void selectionSort(std::vector<T> &, condition = condition());
 
-#include "../src/selectionSort.cpp"
+#include "../../src/sort/selectionSort.cpp"
 
 #endif
