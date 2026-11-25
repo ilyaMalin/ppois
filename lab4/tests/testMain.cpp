@@ -3,6 +3,7 @@
 #include "UnitTest++/TestReporter.h"
 #include "UnitTest++/TestRunner.h"
 #include "UnitTest++/TestDetails.h"
+#include <windows.h>
 
 class CustomReporter : public UnitTest::TestReporter
 {
@@ -41,6 +42,9 @@ public:
 
 int main()
 {
+    SetConsoleCP(65001);
+    SetConsoleOutputCP(65001);
+
     CustomReporter reporter;
     UnitTest::TestRunner runner(reporter);
     return runner.RunTestsIf(UnitTest::Test::GetTestList(), nullptr, UnitTest::True(), 0);

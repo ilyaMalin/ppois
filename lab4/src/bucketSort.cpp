@@ -28,10 +28,7 @@ void bucketSort(iterator _start, iterator _end, std::size_t _amountBucket, bucke
 
     for (auto &_bucket : _buckets)
     {
-        std::stable_sort(
-            _bucket.begin(),
-            _bucket.end(),
-            _condition);
+        std::stable_sort(_bucket.begin(), _bucket.end(), _condition);
     }
 
     for (const auto &_bucket : _buckets)
