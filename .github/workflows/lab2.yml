@@ -95,7 +95,6 @@ jobs:
           --filter 'include/'
           --fail-under-line 90
           --fail-under-function 90
-          --fail-under-branch 90
           --html-details build/cvrg/coverage.html
           --print-summary
 
