@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(ENABLE_COVERAGE "Enable code coverage" OFF)
+option(ENABLE_COVERAGE "Enable code coverage" ON)
 
 if(ENABLE_COVERAGE)
     message(STATUS "Coverage is enabled")
@@ -33,11 +33,11 @@ endforeach()
 list(REMOVE_DUPLICATES MAIN_INCLUDE_PATHS)
 
 set(APP_ENTRY_POINT
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cli/main.cpp"
 )
 
 if(NOT EXISTS "${APP_ENTRY_POINT}")
-    message(FATAL_ERROR "src/main.cpp not found")
+    message(FATAL_ERROR "cli/main.cpp not found")
 endif()
 
 file(GLOB_RECURSE LIB_SOURCES CONFIGURE_DEPENDS
