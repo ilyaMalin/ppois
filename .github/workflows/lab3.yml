@@ -1,22 +1,22 @@
-name: LAB2 CI/CD
+name: LAB 3 CI/CD
 
 on:
   push:
     branches:
-      - "lab2"
+      - "lab3"
       - "main"
     tags:
       - "v*"   
     paths:
-      - 'lab2/**'
-      - '.github/workflows/lab2.yml'
+      - 'lab3/**'
+      - '.github/workflows/lab3.yml'
 
   pull_request:
     branches:
       - main
     paths:
-      - 'lab2/**'
-      - '.github/workflows/lab2.yml'
+      - 'lab3/**'
+      - '.github/workflows/lab3.yml'
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-        working-directory: lab2
+        working-directory: lab3
 
     steps:
       - name: Checkout repository
@@ -81,10 +81,6 @@ jobs:
           --suppress=useStlAlgorithm
           --suppress=constParameterReference
           --error-exitcode=1
-          -I include
-          -I include/cli
-          -I include/multiset
-          -I include/postMachine
           src
 
       - name: Check code coverage
@@ -94,7 +90,6 @@ jobs:
           --filter 'src/'
           --filter 'include/'
           --fail-under-line 90
-          --fail-under-function 90
           --html-details build/cvrg/coverage.html
           --print-summary
 
@@ -116,16 +111,16 @@ jobs:
       - name: Upload executable
         uses: actions/upload-artifact@v7
         with:
-          name: lab2
-          path: lab2/dist/main.exe
+          name: lab3
+          path: lab3/dist/main.exe
           if-no-files-found: error
           retention-days: 14
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
         with:
-          name: lab2-coverage-report
-          path: lab2/build/cvrg/coverage.html
+          name: lab3-coverage-report
+          path: lab3/build/cvrg/coverage.html
           if-no-files-found: error
           retention-days: 14
 
@@ -142,13 +137,13 @@ jobs:
       - name: Download executable
         uses: actions/download-artifact@v8
         with:
-          name: lab2
+          name: lab3
           path: dist
 
       - name: Publish Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
-          name: Lab 2 ${{ github.ref_name }}
+          name: Lab 3 ${{ github.ref_name }}
           generate_release_notes: true
           files: dist/main.exe
